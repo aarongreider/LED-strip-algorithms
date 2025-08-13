@@ -1,4 +1,7 @@
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+import random
+
 
 def quad_bezier_point(p0, p1, p2, t):
     """Quadratic Bézier point at t (0..1)."""
@@ -7,6 +10,7 @@ def quad_bezier_point(p0, p1, p2, t):
         u*u*p0[0] + 2*u*t*p1[0] + t*t*p2[0],
         u*u*p0[1] + 2*u*t*p1[1] + t*t*p2[1]
     )
+
 
 def approx_bezier_length(p0, p1, p2, steps=20):
     """Approximate length of a quadratic Bézier by sampling."""
@@ -20,6 +24,7 @@ def approx_bezier_length(p0, p1, p2, steps=20):
         length += (dx*dx + dy*dy) ** 0.5
         prev = curr
     return length
+
 
 def stitch_quadratic_beziers(curves, num_points, steps_per_curve=100):
     """
@@ -91,26 +96,27 @@ def stitch_quadratic_beziers(curves, num_points, steps_per_curve=100):
 
 
 def plot_points(curves, points):
-        # Plot the full smooth curve for each segment (fine sampling)
+    """ Plot the full smooth curve for each segment (fine sampling) """
     plt.figure(figsize=(8, 8))
-    for p0, p1, p2 in curves:
+    """ for p0, p1, p2 in curves:
         curve_pts = [quad_bezier_point(p0, p1, p2, t/1000) for t in range(1001)]
         cx, cy = zip(*curve_pts)
-        plt.plot(cx, cy, 'b-', alpha=0.3)
+        plt.plot(cx, cy, 'b-', alpha=0.3) """
 
     # Plot the sampled points spaced approximately equally
     px, py = zip(*points)
-    plt.plot(px, py, 'ro-', label='Evenly spaced points')
+    plt.plot(px, py, 'o', label='Evenly spaced points')
 
     # Mark control points
-    for seg in curves:
-        for pt in seg:
-            plt.plot(pt[0], pt[1], 'go')
+    """ for seg in curves:
+            for pt in seg:
+                plt.plot(pt[0], pt[1], 'go') """
 
     plt.title("Stitched Quadratic Bézier Curves with Equal Spacing")
     plt.axis('equal')
     plt.legend()
     plt.show()
+
 
 if __name__ == "__main__":
     # Define multiple quadratic Bézier curves forming a loop
@@ -124,3 +130,4 @@ if __name__ == "__main__":
 
     # Get evenly spaced points along all curves
     points = stitch_quadratic_beziers(curves, 144, steps_per_curve)
+    plot_points(curves, points)

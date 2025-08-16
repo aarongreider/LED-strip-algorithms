@@ -123,6 +123,16 @@ def color_from_palette(t):
         int((b1 + (b2 - b1) * frac) * BRIGHTNESS)
     )
 
+
+def lerp(a, b, t):
+    return a + (b - a) * t
+
+def lerp_color(c1, c2, t):
+    return (
+        int(lerp(c1[0], c2[0], t)),
+        int(lerp(c1[1], c2[1], t)),
+        int(lerp(c1[2], c2[2], t)),
+    )
 # ----------------------------
 # LED HANDLING
 # ----------------------------
@@ -157,18 +167,42 @@ points = stitch_quadratic_beziers(curves, NUM_LEDS, steps_per_curve=50)  # fewer
 
 frame = 0
 last_time = time.ticks_ms()  # record the first timestamp
+
+
+sample_points = 15
+spacing = (NUM_LEDS-1) / (sample_points-1)
+
 while True:
     t = frame * NOISE_SPEED
-    for i, (px, py) in enumerate(points):
+
+    # compute noise just for SAMPLE_POINTS
+    samples = []
+    for s in range(sample_points):
+        px, py = points[int(s * spacing)]
         n = noise2(px + t, py + t * NOISE_Y_OFFSET)
-        target_leds[i] = list(color_from_palette(n))
+        samples.append(color_from_palette(n))
+
+    # interpolate for all NUM_LEDS
+    for i in range(NUM_LEDS):
+        seg = i / spacing
+        idx = int(seg)
+        frac = seg - idx
+        if idx >= sample_points-1:
+            target_leds[i] = samples[-1]
+        else:
+            target_leds[i] = lerp_color(samples[idx], samples[idx+1], frac)
+
     move_to_target()
     display_current()
     frame += 1
+    #sample_points = frame
+
     
+
+
     # DELTA
     now = time.ticks_ms()
-    delta = time.ticks_diff(now, last_time) / 1000  # convert to seconds
+    delta = time.ticks_diff(now, last_time)
     last_time = now
 
     # --- your LED update logic here ---

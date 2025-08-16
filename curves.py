@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import random
 
-
 def quad_bezier_point(p0, p1, p2, t):
     """Quadratic Bézier point at t (0..1)."""
     u = 1 - t

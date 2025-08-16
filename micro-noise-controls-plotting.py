@@ -9,18 +9,18 @@ import time
 NUM_LEDS = 144
 FADE_UP_SPEED = 4
 FADE_DOWN_SPEED = 4
-BRIGHTNESS = .5  # 0.0 to 1.0
+BRIGHTNESS = 0.6  # 0.0 to 1.0
 NOISE_SPEED = 0.05  # lower = slower animation
 NOISE_Y_OFFSET = 0.3
 
 # Color palette: list of RGB tuples (0–255)
 PALETTE = [
-    (0, 255, 0),     # Red
-    (10, 255, 0),   # Orange
-    (50, 80, 0),   # Yellow
-    (80, 255, 0),     # Green
-    (255, 255, 20),     # Blue
-    (255, 255, 255),   # Purple
+    (255, 0, 0),     # Red
+    (255, 128, 0),   # Orange
+    (255, 255, 0),   # Yellow
+    (0, 255, 0),     # Green
+    (0, 0, 255),     # Blue
+    (128, 0, 255),   # Purple
 ]
 
 # ----------------------------

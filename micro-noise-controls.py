@@ -5,6 +5,7 @@ import time
 
 # ----------------------------
 # CONFIG
+# THIS IS THE MOST RECENT ONE
 # ----------------------------
 NUM_LEDS = 144
 FADE_UP_SPEED = 4

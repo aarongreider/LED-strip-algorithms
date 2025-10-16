@@ -53,7 +53,7 @@ def height_to_hue(height, hue_palette):
 
 
 def get_random_value(ix, iy):
-    # deterministic random function, accounts for position of value
+    """ deterministic random function, accounts for position of value """
     val = math.sin(ix * 12.9898 + iy * 78.233) * 43758.5453
     val = val - math.floor(val)
     return val
@@ -81,15 +81,14 @@ def get_height(x, y, scale):
 
 
 def get_distance(t):
-    # generates a sin betwixt 0 and 10
-    # if distance, the unit is meters
+    """ generates a sin betwixt 0 and 10 if distance, the unit is meters """
     return (math.sin(t/2) + 1) * 5
 
 
 def set_hsv(frame):
     """ Set the LEDS """
     offset = frame * 0.05
-    scale = get_distance(offset) / 5
+    scale = (get_distance(offset) / 8 ) + .1
 
     for (x, y), i in points:
         # Add time offset for flowing noise3
@@ -114,12 +113,12 @@ print(LEDS)
 points = get_points_on_circle((0, 0), 10, NUM_LEDS)
 print(points)
 
-hue_palette = [0, .25, .5, .75, 1.0]
+hue_palette = [0, .01, .1, .2, .3]
 
 # Plotting
 fig, ax = plt.subplots()
 px, py = zip(*[p for p, _ in points])  # px = all x values, py = all y values
 dots = ax.scatter(px, py, c='r', s=80)
-ani = FuncAnimation(fig, set_hsv, frames=200, interval=50, blit=False)
+ani = FuncAnimation(fig, set_hsv, frames=1000, interval=50, blit=False)
 plt.show()
 time.sleep(.2)

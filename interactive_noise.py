@@ -109,19 +109,31 @@ def refresh_values():
         if uniform(0, 1) < flutter_probability: # add random flutters
             target_values[i] = 1.0
         if value == target_values[i]:
-            target_values[i] = MIN_V
+            target_values[i] = min_v
 
-
+offset = 0
 def set_hsv(frame):
     """ Set the LEDS """
-    global flutter_probability, flutter_speed_up, flutter_speed_down
-    offset = frame * 0.05
+    global flutter_probability, flutter_speed_up, flutter_speed_down, min_v
+    global offset
+
+    
     scale = clamp(inverse_lerp(-11, 11, get_distance()), 0, 1) # normalized distance
 
+    # smaller scale → faster x, y offset
+    min_speed = 0.002
+    max_speed = .5
+    speed = min_speed + (1 - scale) * (max_speed - min_speed)
+
+    # Increment offset linearly, scaled by speed
+    offset += speed
+    print('%.3f'%speed, '%.3f'%offset)
+
     flutter_probability = lerp(.2, .02, scale)
-    flutter_speed_up = lerp(.15, .02, scale)
-    flutter_speed_down = lerp(.15, .02, scale)
-    print("flutter:", flutter_probability, flutter_speed_up, flutter_speed_down)
+    flutter_speed_up = lerp(.15, .1, scale)
+    flutter_speed_down = lerp(.09, .02, scale)
+    min_v = lerp(.75, .25, scale)
+   #  print("flutter:", flutter_probability, flutter_speed_up, flutter_speed_down)
 
     refresh_values()
 
@@ -132,8 +144,7 @@ def set_hsv(frame):
         # Map noise to leds
         hue = height_to_hue(height, hue_palette)
         # normalize and invert value for hsv
-        sv_scale = lerp(.75, 1, 1 - scale)
-        saturation = sv_scale
+        saturation = lerp(.75, 1, 1 - scale)
         hsv = (hue, saturation, values[i])
         # print("scales", scale, sv_scale)
         # print('hsv', hsv)
@@ -152,9 +163,9 @@ print(LEDS)
 flutter_probability = .02
 flutter_speed_up = .05
 flutter_speed_down = .2
-MIN_V = .38
-values = [MIN_V] * NUM_LEDS
-target_values = [MIN_V] * NUM_LEDS # the target to lerp towards
+min_v = .38
+values = [min_v] * NUM_LEDS
+target_values = [min_v] * NUM_LEDS # the target to lerp towards
 
 
 # Get evenly spaced points along all curves
